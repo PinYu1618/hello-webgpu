@@ -1,6 +1,8 @@
 mod gltk;
+mod init;
 
 pub use self::gltk::Gltk;
+pub use self::init::GltkBuilder;
 
 use winit::{
     event::*,

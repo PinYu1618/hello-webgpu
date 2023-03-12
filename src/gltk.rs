@@ -1,4 +1,4 @@
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct Gltk {
     pub quitting: bool,
 }

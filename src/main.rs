@@ -1,7 +1,7 @@
 fn main() -> gltk::GError {
-    use gltk::Gltk;
+    use gltk::GltkBuilder;
 
-    let context = Gltk::default();
+    let context = GltkBuilder::default();
 
     gltk::main_loop(context)
 }
