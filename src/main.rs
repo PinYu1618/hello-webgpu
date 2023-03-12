@@ -1,7 +1,7 @@
-fn main() -> gltk::GError {
-    use gltk::GltkBuilder;
+use crayon::Crayon;
 
-    let context = GltkBuilder::new().with_title("Hello.").build()?;
+fn main() -> crayon::CError {
+    let context = Crayon::default();
 
-    gltk::main_loop(context)
+    crayon::main_loop(context)
 }

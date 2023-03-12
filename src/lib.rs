@@ -1,10 +1,11 @@
-mod gltk;
-mod init;
-mod platform;
+mod crayon;
+mod gpu;
 
-pub use self::gltk::Gltk;
-pub use self::init::GltkBuilder;
-pub use self::platform::*;
+pub use self::crayon::Crayon;
+pub use self::gpu::Gpu;
+
+pub type CResult<T> = anyhow::Result<T, Box<dyn std::error::Error + Send + Sync>>;
+pub type CError = std::result::Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
 use winit::{
     event::*,
@@ -12,10 +13,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-pub type GResult<T> = anyhow::Result<T, Box<dyn std::error::Error + Send + Sync>>;
-pub type GError = std::result::Result<(), Box<dyn std::error::Error + Send + Sync>>;
-
-pub fn main_loop(mut gltk: Gltk) -> GResult<()> {
+pub fn main_loop(mut ctx: Crayon) -> CResult<()> {
     env_logger::init();
 
     let el = EventLoop::new();
@@ -27,7 +25,7 @@ pub fn main_loop(mut gltk: Gltk) -> GResult<()> {
     let my_window = window.id();
 
     el.run(move |event, _, control_flow| {
-        if gltk.quitting {
+        if ctx.should_quit() {
             control_flow.set_exit();
         } else {
             *control_flow = ControlFlow::Poll;
@@ -42,7 +40,7 @@ pub fn main_loop(mut gltk: Gltk) -> GResult<()> {
                 match event {
                     WindowEvent::Resized(_) => {}
                     WindowEvent::KeyboardInput { .. } => {}
-                    WindowEvent::CloseRequested => gltk.quitting = true,
+                    WindowEvent::CloseRequested => ctx.quit(),
                     _ => {}
                 }
             }
