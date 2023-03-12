@@ -13,7 +13,7 @@ use winit::{
 pub type GResult<T> = anyhow::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 pub type GError = std::result::Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
-pub fn main_loop(ctx: Gltk) -> GResult<()> {
+pub fn main_loop(mut gltk: Gltk) -> GResult<()> {
     env_logger::init();
 
     let el = EventLoop::new();
@@ -25,8 +25,10 @@ pub fn main_loop(ctx: Gltk) -> GResult<()> {
     let my_window = window.id();
 
     el.run(move |event, _, control_flow| {
-        if ctx.quitting {
+        if gltk.quitting {
             *control_flow = ControlFlow::Exit;
+        } else {
+            *control_flow = ControlFlow::Poll;
         }
 
         match &event {
@@ -36,19 +38,18 @@ pub fn main_loop(ctx: Gltk) -> GResult<()> {
                 }
 
                 match event {
-                    WindowEvent::CloseRequested
-                    | WindowEvent::KeyboardInput {
-                        input:
-                            KeyboardInput {
-                                state: ElementState::Pressed,
-                                virtual_keycode: Some(VirtualKeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => *control_flow = ControlFlow::Exit,
+                    WindowEvent::Resized(_) => {}
+                    WindowEvent::KeyboardInput { .. } => {}
+                    WindowEvent::CloseRequested => gltk.quitting = true,
                     _ => {}
                 }
             }
+            Event::RedrawRequested(window_id) => {
+                if *window_id != my_window {
+                    return;
+                }
+            }
+            Event::RedrawEventsCleared => {}
             _ => {}
         }
     });
