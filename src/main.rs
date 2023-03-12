@@ -1,3 +1,7 @@
-fn main() {
-    hello_webgpu::run();
+fn main() -> gltk::GError {
+    use gltk::Gltk;
+
+    let context = Gltk::default();
+
+    gltk::main_loop(context)
 }
