@@ -1,8 +1,10 @@
 mod gltk;
 mod init;
+mod platform;
 
 pub use self::gltk::Gltk;
 pub use self::init::GltkBuilder;
+pub use self::platform::*;
 
 use winit::{
     event::*,
@@ -26,7 +28,7 @@ pub fn main_loop(mut gltk: Gltk) -> GResult<()> {
 
     el.run(move |event, _, control_flow| {
         if gltk.quitting {
-            *control_flow = ControlFlow::Exit;
+            control_flow.set_exit();
         } else {
             *control_flow = ControlFlow::Poll;
         }

@@ -9,14 +9,14 @@ impl GltkBuilder {
         Self { title: None }
     }
 
-    pub fn build(self) -> GResult<Gltk> {
-        let gltk = Gltk { quitting: false };
-        Ok(gltk)
-    }
-
     pub fn with_title<S: ToString>(mut self, title: S) -> Self {
         self.title = Some(title.to_string());
         self
+    }
+
+    pub fn build(self) -> GResult<Gltk> {
+        let gltk = Gltk::from(self);
+        Ok(gltk)
     }
 }
 
